@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,minimum-scale=1,maximum-scale=1" />
+    <title>Tie</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Load a YouTube playlist</h1>
+        <ul data-tie="data.items">
+            <li>
+                <img src="http://i1.ytimg.com/vi/hMjL76obRLI/mqdefault.jpg" data-tie="data.items[i].video.title" alt="" />
+                <span data-tie="data.items[i].video.title"></span>
+            </li>
+        </ul>
+    </div>
+    <script src="js/tie.js"></script>
+    <script src="js/utils.js"></script>
+    <script>
+        utils.load('https://gdata.youtube.com/feeds/api/playlists/PL07D6B14E58F50900?alt=jsonc&v=2&start-index=1&max-results=50', function (e) {
+            console.log('loadPage', e);
+            if (e.data) {
+                tie.init(e);
+            }
+        });
+    </script>
+</body>
+</html>

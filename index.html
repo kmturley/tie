@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,minimum-scale=1,maximum-scale=1" />
+    <title>Tie</title>
+</head>
+<body data-tie="tiedata">
+    <div class="container">
+        <h1 data-tie="person.name"></h1>
+        <h2 data-tie="person.age"></h2>
+        <p data-tie="person.bio"></p>
+        <ul data-tie="person.likes">
+            <li>
+                <span data-tie="person.likes[i].name"></span>
+            </li>
+        </ul>
+        <input type="button" value="Random age" id="button" />
+    </div>
+    <script>
+        // some test data, include before module to use automatically
+        // alternatively you can manually update the data and optionally the target by calling tie.init(tiedata);
+        var tiedata = {
+            person: {
+                name: 'Joe Bloggs',
+                age: 23,
+                bio: 'Born and raised in London',
+                likes: [{
+                    name: 'Fargo',
+                    type: 'movie'
+                }, {
+                    name: 'Quantic',
+                    type: 'artist'
+                }, {
+                    name: 'Stig of the Dump',
+                    type: 'book'
+                }]
+            }
+        };
+        
+        // testing by updating the data using a button or use the console
+        var me = this,
+            button = document.getElementById('button');
+        
+        button.addEventListener('click', function () {
+            tiedata.person.name = 'Ted Baker';
+            tiedata.person.age = Math.round(Math.random() * 100);
+        });
+    </script>
+    <script src="js/tie.js"></script>
+</body>
+</html>
