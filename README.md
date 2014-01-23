@@ -10,7 +10,7 @@ Main advantages of using Tie:
 
 Usage example:
 
-    <body data-tie="obj">
+    <body data-tie="tiedata">
         <h1 data-tie="person.name"></h1>
         <h2 data-tie="person.age"></h2>
         <script>
