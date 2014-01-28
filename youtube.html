@@ -4,21 +4,35 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="initial-scale=1,minimum-scale=1,maximum-scale=1" />
     <title>Tie</title>
+    <style type="text/css">
+        li {
+            list-style: none;
+            margin-bottom: 15px;
+            border: 2px solid gray;
+            padding: 10px;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
         <h1>Load a YouTube playlist</h1>
         <ul data-tie="data.items">
             <li>
-                <img src="http://i1.ytimg.com/vi/hMjL76obRLI/mqdefault.jpg" data-tie="data.items[i].video.title" alt="" />
-                <span data-tie="data.items[i].video.title"></span>
+                <h2 data-tie="data.items[i].video.title"></h2>
+                <img src="http://i1.ytimg.com/vi/hMjL76obRLI/mqdefault.jpg" data-tie="data.items[i].video.thumbnail.hqDefault" alt="" />
+                <!--
+                    Need some more options to make this workable
+                    Easiest way will be to just have a callback where we can have video id here and than in callback we
+                    take the video id and embed video properly
+                    <iframe width="560" height="315" src="" data-tie="data.items[i].video.player.default" frameborder="0" allowfullscreen></iframe>
+                -->
             </li>
         </ul>
     </div>
     <script src="js/tie.js"></script>
     <script src="js/utils.js"></script>
     <script>
-        utils.load('https://gdata.youtube.com/feeds/api/playlists/PL07D6B14E58F50900?alt=jsonc&v=2&start-index=1&max-results=50', function (e) {
+        utils.load('https://gdata.youtube.com/feeds/api/playlists/PL07D6B14E58F50900?alt=jsonc&v=2&start-index=1&max-results=10', function (e) {
             console.log('loadPage', e);
             if (e.data) {
                 tie.init(e);
