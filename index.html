@@ -4,40 +4,49 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="initial-scale=1,minimum-scale=1,maximum-scale=1" />
     <title>Tie</title>
-    <style type="text/css">
-        li {
-            list-style: none;
-            margin-bottom: 15px;
-            border: 2px solid gray;
-            padding: 10px;
-        }
-    </style>
 </head>
-<body>
+<body data-tie="tiedata">
     <div class="container">
-        <h1>Load a YouTube playlist</h1>
-        <ul data-tie="data.items">
+        <h1 data-tie="person.name"></h1>
+        <h2 data-tie="person.age"></h2>
+        <p data-tie="person.bio"></p>
+        <ul data-tie="person.likes">
             <li>
-                <h2 data-tie="data.items[i].video.title"></h2>
-                <img src="http://i1.ytimg.com/vi/hMjL76obRLI/mqdefault.jpg" data-tie="data.items[i].video.thumbnail.hqDefault" alt="" />
-                <!--
-                    Need some more options to make this workable
-                    Easiest way will be to just have a callback where we can have video id here and than in callback we
-                    take the video id and embed video properly
-                    <iframe width="560" height="315" src="" data-tie="data.items[i].video.player.default" frameborder="0" allowfullscreen></iframe>
-                -->
+                <span data-tie="person.likes[i].name"></span>
             </li>
         </ul>
+        <input type="button" value="Random age" id="button" />
     </div>
-    <script src="js/tie.js"></script>
-    <script src="js/utils.js"></script>
     <script>
-        utils.load('https://gdata.youtube.com/feeds/api/playlists/PL07D6B14E58F50900?alt=jsonc&v=2&start-index=1&max-results=10', function (e) {
-            console.log('loadPage', e);
-            if (e.data) {
-                tie.init(e);
+        // some test data, include before module to use automatically
+        // alternatively you can manually update the data and optionally the target by calling tie.init(tiedata);
+        var tiedata = {
+            person: {
+                name: 'Joe Bloggs',
+                age: 23,
+                bio: 'Born and raised in London',
+                likes: [{
+                    name: 'Fargo',
+                    type: 'movie'
+                }, {
+                    name: 'Quantic',
+                    type: 'artist'
+                }, {
+                    name: 'Stig of the Dump',
+                    type: 'book'
+                }]
             }
+        };
+        
+        // testing by updating the data using a button or use the console
+        var me = this,
+            button = document.getElementById('button');
+        
+        button.addEventListener('click', function () {
+            tiedata.person.name = 'Ted Baker';
+            tiedata.person.age = Math.round(Math.random() * 100);
         });
     </script>
+    <script src="js/tie.js"></script>
 </body>
 </html>
