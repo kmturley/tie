@@ -20,6 +20,8 @@ Usage example:
                 age: 23
             }
         };
+        //start tie and provide data
+        tie.init(tiedata);
     </script>
     <script src="js/tie.js"></script>
 </body>
