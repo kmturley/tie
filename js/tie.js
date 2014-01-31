@@ -11,14 +11,19 @@ var tie = (function () {
     var module = {
         attrib: 'data-tie',
         init: function (data, id) {
+            this.data = data;
             // get element by id otherwise use the document body
             if (id) {
                 this.setup(data, document.getElementById(id).getElementsByTagName('*'));
             } else {
-                this.setup(data, document.getElementsByTagName('*'));
+                /* Use document.body.getElementsByTagName('*')
+                 * instead of document.getElementsByTagName('*')
+                 * because we don't need to include html, head, title etc
+                 */
+                this.setup(document.body.getElementsByTagName('*'));
             }
         },
-        setup: function (data, items) {
+        setup: function (items) {
             var i = 0,
                 j = 0,
                 key = '',
@@ -26,37 +31,55 @@ var tie = (function () {
                 type = '',
                 list = null,
                 nodekey = '',
+                item,
+                itemType,
                 node = false;
             
             // loop through the items and check if they have the data attribute
             for (i = 0; i < items.length; i += 1) {
-                if (items[i].hasAttribute(this.attrib) && items[i] !== document.body) {
-                    key = items[i].getAttribute(this.attrib);
-                    match = this.find(key, data);
+                item = items[i];
+                itemType = item.tagName.toLowerCase();
+                //If tag is script or link, do nothing
+                if(itemType =='script' || itemType =='link') continue;
+                if (item.hasAttribute(this.attrib)) { // We don't need  && item !== document.body any more
+                    key = item.getAttribute(this.attrib);
+                    match = this.find(key);
                     type = Object.prototype.toString.call(match.value);
                     
                     // if the data attribute is an array, loop through and duplicate the dom template
                     if (type === '[object Array]') {
                         list = document.createDocumentFragment();
-                        nodekey = items[i].firstElementChild.getAttribute(this.attrib);
+                        nodekey = item.firstElementChild.getAttribute(this.attrib);
                         node = false;
                         for (j = 0; j < match.value.length; j += 1) {
-                            node = items[i].firstElementChild.cloneNode(true);
+                            node = item.firstElementChild.cloneNode(true);
                             node.innerHTML = node.innerHTML.replace(/\[i\]/g, '.' + j);
                             list.appendChild(node);
                         }
-                        items[i].removeChild(items[i].firstElementChild);
-                        items[i].appendChild(list);
+                        item.removeChild(item.firstElementChild);
+                        item.appendChild(list);
 
                     // if the data is a number or string then update the dom text content with the value and bind the data
                     } else if (type === '[object String]' || type === '[object Number]') {
-                        Object.defineProperty(match.parent, match.key, this.getset(items[i], match.key, match.value));
-                        items[i].textContent = match.value;
+                        Object.defineProperty(match.parent, match.key, this.getset(item, match.key, match.value));
+                        //Check the item type and add content accordingly
+                        switch(itemType) {
+                        case 'img':
+                        case 'iframe':
+                            item.src = match.value;
+                            break;
+                        case 'input':
+                        case 'textarea':
+                            item.value = match.value;
+                            break;
+                        default:
+                            item.textContent = match.value;   
+                        }
                     }
                 }
             }
         },
-        find: function (key, data) {
+        find: function (key) {
             // split the string and matche each part to an object of data
             var matchkey = '',
                 matchparent = {},
@@ -69,7 +92,7 @@ var tie = (function () {
                     } else {
                         return false;
                     }
-                }, data);
+                }, this.data);
             
             // return the match plus it's parent and key for the dom binding
             return {
