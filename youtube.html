@@ -5,11 +5,45 @@
     <meta name="viewport" content="initial-scale=1,minimum-scale=1,maximum-scale=1" />
     <title>Tie</title>
     <style type="text/css">
-        li {
+        ul {
             list-style: none;
-            margin-bottom: 15px;
-            border: 2px solid gray;
-            padding: 10px;
+            margin: 0;
+            padding: 0;
+        }
+        li {
+            width: 560px;
+            margin: 0 0 20px 0;
+        }
+        
+        h2 {
+            margin: 0;
+        }
+        
+        li span {
+            display: block;
+            height: 315px;
+            background-color: #000;
+            background-image: url('http://www.ajaxload.info/cache/00/00/00/FF/FF/FF/5-1.gif');
+            background-position: center center;
+            background-repeat: no-repeat;
+        }
+        
+        li img {
+            display: block;
+            margin: 0 auto;
+            height: 100%;
+        }
+        li.active img {
+            display: none;
+        }
+        
+        li iframe {
+            display: none;
+            width: 100%;
+            height: 100%;
+        }
+        li.active iframe {
+            display: block;
         }
     </style>
 </head>
@@ -18,15 +52,11 @@
         <h1>Load a YouTube playlist</h1>
         <ul data-tie="data.items">
             <li>
+                <span>
+                    <img data-tie="data.items[i].video.thumbnail.hqDefault" alt="" />
+                    <iframe width="560" height="315" data-tie="data.items[i].video.content.5" frameborder="0" allowfullscreen></iframe>
+                </span>
                 <h2 data-tie="data.items[i].video.title"></h2>
-                <img src="http://i1.ytimg.com/vi/hMjL76obRLI/mqdefault.jpg" data-tie="data.items[i].video.thumbnail.hqDefault" alt="" />
-                Video URL: <input size="90" value="" data-tie="data.items[i].video.player.default">
-                <!--
-                    Need some more options to make this workable
-                    Easiest way will be to just have a callback where we can have video id here and than in callback we
-                    take the video id and embed video properly
-                    <iframe width="560" height="315" src="" data-tie="data.items[i].video.player.default" frameborder="0" allowfullscreen></iframe>
-                -->
             </li>
         </ul>
     </div>
@@ -37,8 +67,17 @@
             console.log('loadPage', e);
             if (e.data) {
                 tie.init(e);
+                
+                // add some click events
+                document.getElementsByTagName('ul')[0].addEventListener('click', function (e) {
+                    if (e.target.nodeName === 'IMG') {
+                        e.target.parentNode.parentNode.className = 'active';
+                    }
+                });
             }
         });
+        
+        
     </script>
 </body>
 </html>
